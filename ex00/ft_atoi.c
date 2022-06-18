@@ -6,9 +6,11 @@
 /*   By: matwinte <matwinte@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 06:07:10 by matwinte          #+#    #+#             */
-/*   Updated: 2022/06/14 01:54:14 by matwinte         ###   ########.fr       */
+/*   Updated: 2022/06/18 19:21:32 by matwinte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdlib.h>
 
 int	ft_char_is_numeric(char c)
 {
@@ -33,24 +35,26 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-int	ft_atoi(char *str)
+int	ft_atoi(char *str, int **nbr)
 {
 	int	i;
 	int	sign;
-	int	nbr;
-
+	int *n;
+	
 	i = 0;
 	sign = 1;
-	nbr = 0;
+	n = malloc(sizeof(int));
 	while (ft_isspace(str[i]))
 		i++;
 	while (ft_char_is_sign(str[i]))
 			sign *= ft_char_is_sign(str[i++]);
 	while (ft_char_is_numeric(str[i]))
 	{
-		nbr *= 10;
-		nbr += (str[i] - '0');
+		*n *= 10;
+		*n += (str[i] - '0');
 		i++;
 	}
-	return (nbr * sign);
+	*n *= sign;
+	nbr[0] = n;
+	return (i);
 }
