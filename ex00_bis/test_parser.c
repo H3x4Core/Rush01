@@ -36,14 +36,18 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-int *parser(char *str, int n, int arg, int *index)
+int *parser(char *str, int n, int arg)
 {
 	int i;
 	int j;
 	int cel;
+	int *index;
 
 	i = 0;
 	j = 0;
+	index = malloc(sizeof(int) * (n + 2) * (n + 2));
+	if (!index)
+		return (0);
 	while (j < arg && str[i])
 	{
 		cel = get_pos_index_cell(j, n);
@@ -61,37 +65,37 @@ void error(void)
 	write(1, "Error\n", 6);
 }
 
-int main (void)
+int main (int argc, char **argv)
 {
-	char *argv = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4";
 	int arg;
 	int n;
 	int larray;
 	int *index;
-	int *map = 0;
-	//int **pindex = &index;
-
-	arg = ft_arg_count(argv);
-	n = arg / 4;
-	larray = n + 2;
 	
-	index = malloc(sizeof(int) * larray);
-	
-	if (!index)
+	if (argc == 1)
 	{
-		printf("Malloc Error\n");
+		argv[1] = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5";
+		argc++;
+	}
+	
+	
+	if (argc != 2)
+	{
+		error();
 		return (-1);
 	}
-
-	map = parser(argv, n, arg, index);
 	
+	arg = ft_arg_count(argv[1]);
+	n = arg / 4;
+	larray = n + 2;
+	index = parser(argv[1], n, arg);
+	
+	printf("n: %i\n", n);
 	for (int i = 0; i < larray * larray; i++)
 	{
-		printf("%i", map[i]);
+		printf("%i", index[i]);
 		if (!((i + 1) % larray))
 			printf("\n");
 	}
-
-	//int **tab = malloc((n + 2) * (n + 2));
-
+	return (0);
 }

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "ft_atoi.c"
-#include <stdio.h>
+#include "ft_atoi.c"	//DEBUG
+#include <stdio.h>		//DEBUG
 
 int ft_arg_count(char *str)
 {
@@ -36,14 +36,18 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-int *parser(char *str, int n, int arg, int *index)
+int *parser(char *str, int n, int arg)
 {
 	int i;
 	int j;
 	int cel;
+	int *index;
 
 	i = 0;
 	j = 0;
+	index = malloc(sizeof(int) * (n + 2) * (n + 2));
+	if (!index)
+		return (0);
 	while (j < arg && str[i])
 	{
 		cel = get_pos_index_cell(j, n);
@@ -53,9 +57,7 @@ int *parser(char *str, int n, int arg, int *index)
 		i += 2;
 		j++;
 	}
-	if (index[n - 1])
-		return (index);
-	return (0);
+	return (index);
 }
 
 void error(void)
@@ -69,28 +71,31 @@ int main (int argc, char **argv)
 	int n;
 	int larray;
 	int *index;
-	//int **pindex = &index;
-
+	
+	if (argc == 1)	//DEBUG
+	{
+		argv[1] = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5";
+		argc++;
+	}				//DEBUG
+	
+	
 	if (argc != 2)
 	{
 		error();
 		return (-1);
 	}
-
+	
 	arg = ft_arg_count(argv[1]);
 	n = arg / 4;
 	larray = n + 2;
-	index = malloc(sizeof(int) * larray);
-	index = parser(argv[1], n, arg, index);
+	index = parser(argv[1], n, arg);
 	
-	printf("n: %i\n", n);
+	printf("n: %i\n", n); 	//DEBUG
 	for (int i = 0; i < larray * larray; i++)
 	{
 		printf("%i", index[i]);
 		if (!((i + 1) % larray))
 			printf("\n");
-	}
-
-	//int **tab = malloc((n + 2) * (n + 2));
-
+	}						//DEBUG
+	return (0);
 }
