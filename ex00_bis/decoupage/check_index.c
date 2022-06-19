@@ -6,7 +6,7 @@
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 17:59:06 by mwinter           #+#    #+#             */
-/*   Updated: 2022/06/19 19:10:04 by mwinter          ###   ########.fr       */
+/*   Updated: 2022/06/19 20:33:35 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,117 +14,114 @@
 
 int	index_check_up(t_coord coord, int n, int *map)
 {
-	t_coord	check_coord;
-	int		index;
-	int		height;
-	int		highest_encounter;
-	int		count;
+	t_check	check;
 
-	index = *get_index_cell(coord, n, 0, map);
-	check_coord.x = coord.x;
-	check_coord.y = 0;
-	height = 0;
-	highest_encounter = 0;
-	count = 0;
-	while (check_coord.y < n)
+	check.index = *get_index_cell(coord, n, 0, map);
+	check.coord.x = coord.x;
+	check.coord.y = 0;
+	check.highest_encounter = 0;
+	check.count = 0;
+	check.not_placed = 0;
+	while (check.coord.y < n)
 	{
-		height = *get_box_cell(check_coord, n, map);
-		if (height > highest_encounter)
+		check.height = *get_box_cell(check.coord, n, map);
+		if (check.height == 0)
+			check.not_placed++;
+		if (check.height > check.highest_encounter)
 		{
-			count++;
-			highest_encounter = height;
+			check.count++;
+			check.highest_encounter = check.height;
 		}
-		if (count > index)
+		if (check.count > check.index)
 			return (1);
-		check_coord.y++;
+		check.coord.y++;
 	}
+	if (!check.not_placed && check.index != check.count)
+		return (1);
 	return (0);
 }
 
 int	index_check_down(t_coord coord, int n, int *map)
 {
-	t_coord	check_coord;
-	int		index;
-	int		height;
-	int		highest_encounter;
-	int		count;
+	t_check	check;
 
-	index = *get_index_cell(coord, n, 1, map);
-	check_coord.x = coord.x;
-	check_coord.y = n - 1;
-	height = 0;
-	highest_encounter = 0;
-	count = 0;
-	while (check_coord.y > -1)
+	check.index = *get_index_cell(coord, n, 1, map);
+	check.coord.x = coord.x;
+	check.coord.y = n - 1;
+	check.highest_encounter = 0;
+	check.count = 0;
+	while (check.coord.y > -1)
 	{
-		height = *get_box_cell(check_coord, n, map);
-		if (height > highest_encounter)
+		check.height = *get_box_cell(check.coord, n, map);
+		if (check.height == 0)
+			check.not_placed++;
+		if (check.height > check.highest_encounter)
 		{
-			count++;
-			highest_encounter = height;
+			check.count++;
+			check.highest_encounter = check.height;
 		}
-		if (count > index)
+		if (check.count > check.index)
 			return (1);
-		check_coord.y--;
+		check.coord.y--;
 	}
+	if (!check.not_placed && check.index != check.count)
+		return (1);
 	return (0);
 }
 
 int	index_check_left(t_coord coord, int n, int *map)
 {
-	t_coord	check_coord;
-	int		index;
-	int		height;
-	int		highest_encounter;
-	int		count;
+	t_check	check;
 
-	index = *get_index_cell(coord, n, 2, map);
-	check_coord.x = 0;
-	check_coord.y = coord.y;
-	height = 0;
-	highest_encounter = 0;
-	count = 0;
-	while (check_coord.x < n)
+	check.index = *get_index_cell(coord, n, 2, map);
+	check.coord.x = 0;
+	check.coord.y = coord.y;
+	check.highest_encounter = 0;
+	check.count = 0;
+	while (check.coord.x < n)
 	{
-		height = *get_box_cell(check_coord, n, map);
-		if (height > highest_encounter)
+		check.height = *get_box_cell(check.coord, n, map);
+		if (check.height == 0)
+			check.not_placed++;
+		if (check.height > check.highest_encounter)
 		{
-			count++;
-			highest_encounter = height;
+			check.count++;
+			check.highest_encounter = check.height;
 		}
-		if (count > index)
+		if (check.count > check.index)
 			return (1);
-		check_coord.x++;
+		check.coord.x++;
 	}
+	if (!check.not_placed && check.index != check.count)
+		return (1);
 	return (0);
 }
 
 int	index_check_right(t_coord coord, int n, int *map)
 {
-	t_coord	check_coord;
-	int		index;
-	int		height;
-	int		highest_encounter;
-	int		count;
+	t_check	check;
 
-	index = *get_index_cell(coord, n, 3, map);
-	check_coord.x = n - 1;
-	check_coord.y = coord.y;
-	height = 0;
-	highest_encounter = 0;
-	count = 0;
-	while (check_coord.x > -1)
+	check.index = *get_index_cell(coord, n, 3, map);
+	check.coord.x = n - 1;
+	check.coord.y = coord.y;
+	check.highest_encounter = 0;
+	check.count = 0;
+	while (check.coord.x > -1)
 	{
-		height = *get_box_cell(check_coord, n, map);
-		if (height > highest_encounter)
+		check.height = *get_box_cell(check.coord, n, map);
+		if (check.height == 0)
+			check.not_placed++;
+		if (check.height > check.highest_encounter)
 		{
-			count++;
-			highest_encounter = height;
+			check.count++;
+			check.highest_encounter = check.height;
 		}
-		if (count > index)
+		if (check.count > check.index)
 			return (1);
-		check_coord.x--;
+		check.coord.x--;
 	}
+	if (!check.not_placed && check.index != check.count)
+		return (1);
 	return (0);
 }
 

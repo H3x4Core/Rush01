@@ -6,7 +6,7 @@
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 18:13:51 by mwinter           #+#    #+#             */
-/*   Updated: 2022/06/19 18:16:47 by mwinter          ###   ########.fr       */
+/*   Updated: 2022/06/19 20:38:39 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	main(int argc, char **argv)
 		return (error());
 	if (solve(n, (n * n) - 1, map))
 	{
+		print_grid(n, map);
 		free(map);
 		return (0);
 	}
