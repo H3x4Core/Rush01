@@ -38,52 +38,75 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-//WARNING MALLOC
-int *get_index_cell(int x, int y, int n)
+int *get_index_cell(int x, int y, int n, int side,int *map)
 {
-	int *array;
-	array = malloc(sizeof(int) * 4);
-	array[0] = 	x + 1;							//col_up
-	array[1] =	x + 1 + (n + 1) * (n + 2);		//col_down
-	array[2] =	y * (n + 2) + n + 2;			//row_left
-	array[3] =	y * (n + 2) + 2 * (n + 2) - 1;	//row_right
-	
-	return (array);
+	if (side == 0)
+		return (&map[x + 1]);							//col_up
+	if (side == 1)
+		return (&map[(x + 1 + (n + 1) * (n + 2))]);		//col_down
+	if (side == 2)
+		return (&map[y * (n + 2) + n + 2]);				//row_left
+	if (side == 3)
+		return (&map[y * (n + 2) + 2 * (n + 2) - 1]);	//row_right
+	return (0);
 }
 
-int get_box_cell(int x, int y, int n)
+int *get_box_cell(int x, int y, int n, int *map)
 {
 	y *= n + 2; // place to the correct row
 	y += n + 2; // offset row
 	x += 1;		// offset col
-	return (x + y);
+	return (&map[x + y]);
 }
 
+int *get_adress(int i, int *map)
+{
+	return (&map[i]);
+}
 
+/*
+int check(int x, int y, int n, int *map)
+{
+	int up;
+	int down;
+	int left;
+	int right;
+	int *index;
+	
+	while (i < n)
+	{
+		
+	}
+	
+	return (0);
+}
+*/
+
+//WARNING MALLOC
 int *parser(char *str, int n, int arg)
 {
 	int i;
 	int j;
 	int k;
 	int cel;
-	int *index;
+	int *map;
 
 	i = 0;
 	j = 0;
-	index = malloc(sizeof(int) * (n + 2) * (n + 2));
-	if (!index)
+	map = malloc(sizeof(int) * (n + 2) * (n + 2));
+	if (!map)
 		return (0);
 	while (j < arg && str[i])
 	{
 		k = 0;
 		cel = get_pos_index_cell(j, n);
-		index[cel] = ft_atoi_count(&str[i], &k);
-		if (index[cel] < 1 || index[cel] > n || k != 1) // check if value in range && only 2 char have been processed
+		map[cel] = ft_atoi_count(&str[i], &k);
+		if (map[cel] < 1 || map[cel] > n || k != 1) // check if value in range && only 2 char have been processed
 			return(0);
 		i += k + 1;
 		j++;
 	}
-	return (index);
+	return (map);
 }
 
 void error(void)
@@ -96,7 +119,7 @@ int main (int argc, char **argv)
 	int arg;	// Count ARG
 	int n;		// BOX Array SIZE
 	int larray;	// FULL ARRAY SIZE
-	int *index; // ARRAY
+	int *map; 	// ARRAY
 	
 	if (argc == 1)	// DEBUG
 	{
@@ -118,8 +141,8 @@ int main (int argc, char **argv)
 	{
 		n = arg / 4;
 		larray = n + 2;
-		index = parser(argv[1], n, arg);
-		if (!index)
+		map = parser(argv[1], n, arg);
+		if (!map)
 		{
 			error();
 			printf("Arg parsing issue\n"); //DEBUG
@@ -136,9 +159,14 @@ int main (int argc, char **argv)
 	printf("n: %i\n", n); 	//DEBUG
 	for (int i = 0; i < larray * larray; i++)
 	{
-		printf("%i", index[i]);
+		printf("%i", map[i]);
 		if (!((i + 1) % larray))
 			printf("\n");
 	}						//DEBUG
+
+	//DEBUG TEST ACCESS AND WRITE IN MAP
+	printf("%i\n", *get_box_cell(1, 1, n, map));
+	printf("%i\n", *get_index_cell(1, 1, n, 0, map));
+
 	return (0);
 }
