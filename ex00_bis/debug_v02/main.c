@@ -1,44 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   show.c                                             :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/19 17:20:25 by btinturi          #+#    #+#             */
-/*   Updated: 2022/06/19 20:36:10 by mwinter          ###   ########.fr       */
+/*   Created: 2022/06/19 18:13:51 by mwinter           #+#    #+#             */
+/*   Updated: 2022/06/19 18:16:47 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	print_grid(int n, int *map)
+int	main(int argc, char **argv)
 {
-	t_coord	coord;
-	char	cell;
+	int	arg;
+	int	n;
+	int	*map;
 
-	coord.x = 0;
-	coord.y = 0;
-	while (coord.y < n)
+	if (argc != 2)
+		return (error());
+	arg = ft_arg_count(argv[1]);
+	if (!(arg % 4) && (4 * MIN_N) <= arg && arg <= (4 * MAX_N))
 	{
-		coord.x = 0;
-		while (coord.x < n)
-		{
-			cell = *get_box_cell(coord, n, map) + 48;
-			write(1, &cell, 1);
-			if (coord.x == n - 1)
-				write(1, "\n", 1);
-			else
-				write(1, " ", 1);
-			coord.x++;
-		}
-		coord.y++;
+		n = arg / 4;
+		map = parser(argv[1], n, arg);
+		if (!map || check_forbidden_index(n, map))
+			return (error());
 	}
-	return (0);
-}
-
-int	error(void)
-{
-	write(1, "Error\n", 6);
-	return (-1);
+	else
+		return (error());
+	if (solve(n, (n * n) - 1, map))
+	{
+		free(map);
+		return (0);
+	}
+	free(map);
+	return (error());
 }
