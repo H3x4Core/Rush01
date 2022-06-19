@@ -22,15 +22,17 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-int get_index_cell(int x, int y, int n)
+
+int *get_index_cell(int x, int y, int n)
 {
-	int array[4];
-	array[0] 	//col_up
-	array[1]	//col_down
-	array[2]	//row_left
-	array[3]	//row_right
+	int *array;
+	array = malloc(sizeof(int) * 4);
+	array[0] = 	x + 1;							//col_up
+	array[1] =	x + 1 + (n + 1) * (n + 2);		//col_down
+	array[2] =	y * (n + 2) + n + 2;			//row_left
+	array[3] =	y * (n + 2) + 2 * (n + 2) - 1;	//row_right
 	
-	return ();
+	return (array);
 }
 
 int get_box_cell(int x, int y, int n)
@@ -44,10 +46,13 @@ int get_box_cell(int x, int y, int n)
 
 int main (void)
 {
-	int x = 1;
-	int y = 4;
+	int x = 3;
+	int y = 2;
 	int n = 5;
+	int *index;
 
-	printf("%i", get_box_cell(x, y, n));
+	printf("cel: %i\n", get_box_cell(x, y, n));
+	index = get_index_cell(x, y, n);
+	printf("up: %i\ndo: %i\nle: %i\nri: %i", index[0], index[1], index[2], index[3]);
 	return (0);
 }

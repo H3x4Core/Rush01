@@ -38,16 +38,24 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
+//WARNING MALLOC
 int *get_index_cell(int x, int y, int n)
 {
-	int index_cell[4];
+	int *array;
+	array = malloc(sizeof(int) * 4);
+	array[0] = 	x + 1;							//col_up
+	array[1] =	x + 1 + (n + 1) * (n + 2);		//col_down
+	array[2] =	y * (n + 2) + n + 2;			//row_left
+	array[3] =	y * (n + 2) + 2 * (n + 2) - 1;	//row_right
+	
+	return (array);
 }
 
 int get_box_cell(int x, int y, int n)
 {
-	y *= n + 2;
-	y += n + 2;
-	x += 1;
+	y *= n + 2; // place to the correct row
+	y += n + 2; // offset row
+	x += 1;		// offset col
 	return (x + y);
 }
 
