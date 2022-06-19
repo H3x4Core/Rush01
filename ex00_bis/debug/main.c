@@ -106,6 +106,31 @@ int *get_box_cell(t_coord coord, int n, int *map)
 	return (&map[coord.x + coord.y]);
 }
 
+int check_forbidden_index(int n, int *map)
+{
+	t_coord coord;
+	int sum;
+
+	coord.x = 0;
+	coord.y = 0;
+	while (coord.x < n)
+	{
+		sum = *get_index_cell(coord, n, 0, map) + *get_index_cell(coord, n, 1, map);
+		if (sum > n + 1 || sum == 2)
+			return (-1);
+		coord.x++;
+	}
+	coord.x = 0;
+	while (coord.y < n || sum == 2)
+	{
+		sum = *get_index_cell(coord, n, 2, map) + *get_index_cell(coord, n, 3, map);
+		if (sum > n + 1)
+			return (-1);
+		coord.y++;
+	}
+	return (0);	
+}
+
 int row_check(t_coord box_coord, int box_height, int n, int *map)
 {
 	t_coord check_coord;
@@ -350,11 +375,48 @@ int *parser(char *str, int n, int arg)
 	return (map);
 }
 
-void error(void)
+int error(void)
 {
 	write(1, "Error\n", 6);
+	return (-1);
 }
 
+int main (int argc, char **argv)
+{
+	int arg;	// Count ARG
+	int n;		// BOX Array SIZE
+	int *map; 	// MAP
+	
+	if (argc == 1)	// DEBUG
+	{
+		argv[1] = "4 3 2 1 1 2 2 2 4 3 2 1 1 2 2 2";
+		argc++;
+	}				// DEBUG
+	if (argc != 2)
+		return error();
+	arg = ft_arg_count(argv[1]);
+	if (!(arg % 4) && (4 * MIN_N) <= arg && arg <= (4 * MAX_N)) //Check if arg is multiple of 4, and it's in the correct range of 4 multiples
+	{
+		n = arg / 4;
+		map = parser(argv[1], n, arg);
+		if (!map || check_forbidden_index(n, map))
+			return error();
+	}
+	else
+		return error();
+
+	if (solve(n, (n * n) - 1, map))
+	{
+		debug_print(n, map, 0, "solved!");
+		free(map);
+		return (0);
+	}
+	debug_print(n, map, 1, "fail!");
+	free(map);
+	return error();
+}
+
+#if 0
 int main (int argc, char **argv)
 {
 	int arg;	// Count ARG
@@ -407,8 +469,9 @@ int main (int argc, char **argv)
 	return (0);
 }
 
-/*
+#endif
 
+#if 0
 int main (void)
 {
 	int n = 5;
@@ -439,4 +502,4 @@ int main (void)
 
 }
 
-*/
+#endif
