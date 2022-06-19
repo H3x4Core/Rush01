@@ -3,6 +3,7 @@
 
 # VS Code
 .vscode
+test
 
 # Prerequisites
 *.d
