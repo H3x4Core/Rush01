@@ -284,7 +284,7 @@ int safe(t_coord coord, int box_height, int n, int *map)
 	if (duplicate_check(coord, box_height, n, map))
 		return (1);
 	*get_box_cell(coord, n, map) = box_height;
-	debug_print_coord(n, map, coord, "put box");
+	//debug_print_coord(n, map, coord, "put box");
 	if (index_check(coord, n, map))
 	{
 		*get_box_cell(coord, n, map) = 0;
@@ -304,8 +304,8 @@ int solve(int n, int stock_box, int *map)
 	{
 		box_height = 1 + stock_box / n;
 		coord.y = stock_box % n;
-		debug_print_coord(n, map, coord, "start backtrack");
-		printf("                     height: %i\nstock: %i\n", box_height, stock_box);
+		//debug_print_coord(n, map, coord, "start backtrack");
+		//printf("                     height: %i\nstock: %i\n", box_height, stock_box);
 		if (*get_box_cell(coord, n, map) == 0)
 		{
 			if (!safe(coord, box_height, n, map))
@@ -363,7 +363,7 @@ int main (int argc, char **argv)
 	
 	if (argc == 1)	// DEBUG
 	{
-		argv[1] = "3 1 2 4 2 2 3 2 1 2 2 2 1 3 3 3 1 5 3 2";
+		argv[1] = "4 4 4 4 4 4 4 4 4 4 4 1 1 2 2 2";
 		argc++;
 	}				// DEBUG
 
@@ -396,36 +396,33 @@ int main (int argc, char **argv)
 	}
 
 	debug_print(n, map, 0, " -- original --");
-	solve(n, (n * n - 1), map);
+	if(solve(n, (n * n - 1), map))
+		printf("solved !!\n");
+	else
+		printf("Fail!!!!\n");
 	debug_print(n, map, 0, " -- solved --");
 
-
-	//DEBUG TEST ACCESS AND WRITE IN MAP
-	t_coord coord;
-	coord.x = 1;
-	coord.y = 1;
-	printf("%i\n", *get_box_cell(coord, n, map));
-	printf("%i\n", *get_index_cell(coord, n, 0, map));
-	//DEBUG TEST END
 
 	free(map);
 	return (0);
 }
 
 /*
+
 int main (void)
 {
-	int n = 4;
-	int map[36] = {0, 2, 3, 1, 3, 0,
-					2, 0, 2, 4, 3, 2,
-					1, 4, 3, 2, 1, 4,
-					2, 3, 4, 1, 2, 2,
-					4, 2, 1, 3, 4, 1,
-					0, 3, 2, 2, 1, 0};
+	int n = 5;
+	int map[49] = {0, 3, 1, 2, 4, 2, 0,
+					2, 0, 5, 4, 0, 0, 3,
+					2, 4, 0, 0, 0, 5, 1,
+					1, 5, 0, 0, 0, 0, 5,
+					3, 0, 0, 5, 0, 0, 3,
+					3, 0, 0, 0, 5, 4, 2,
+					0, 2, 3, 2, 1, 2, 0};
 	
 	debug_print(n, map, 0, "Original");
 
-	solve(n, 0, map);
+	solve(n, 16, map);
 
 	debug_print(n, map, 1, "Solved");
 
@@ -434,7 +431,7 @@ int main (void)
 	{
 		for (coord.y = 0; coord.y < n; coord.y++)
 		{
-			*get_box_cell(coord, n, map) = 1;
+			*get_box_cell(coord, n, map) = 9;
 			debug_print_coord(n, map, coord, "Coo: ");
 		}
 		
