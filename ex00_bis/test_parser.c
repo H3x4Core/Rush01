@@ -1,25 +1,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "ft_atoi.c"
-#include <stdio.h>
+#define MIN_N 4
+#define MAX_N 9
 
-int ft_arg_count(char *str)
-{
-	int i;
-	int words;
-
-	i = 0;
-	words = 0;
-	while (str[i])
-	{
-		if ((!ft_isspace(str[i]) && ft_isspace(str[i + 1]))		//Check for char followed with space
-			|| (!ft_isspace(str[i]) && str[i + 1] == 0)) 		//check for word followed with end of string
-			words++;
-		i++;
-	}
-	return (words);
-}
+#include "ft_atoi.c"	//DEBUG
+#include <stdio.h>		//DEBUG
 
 int get_pos_index_cell(int pos, int n)
 {
@@ -36,66 +22,32 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-int *parser(char *str, int n, int arg)
+int get_index_cell(int x, int y, int n)
 {
-	int i;
-	int j;
-	int cel;
-	int *index;
-
-	i = 0;
-	j = 0;
-	index = malloc(sizeof(int) * (n + 2) * (n + 2));
-	if (!index)
-		return (0);
-	while (j < arg && str[i])
-	{
-		cel = get_pos_index_cell(j, n);
-		index[cel] = ft_atoi(&str[i]);
-		if (index[cel] < 1 || index[cel] > n)
-			return(0);
-		i += 2;
-		j++;
-	}
-	return (index);
+	int array[4];
+	array[0] 	//col_up
+	array[1]	//col_down
+	array[2]	//row_left
+	array[3]	//row_right
+	
+	return ();
 }
 
-void error(void)
+int get_box_cell(int x, int y, int n)
 {
-	write(1, "Error\n", 6);
+	y *= n + 2; // place to the correct row
+	y += n + 2; // offset row
+	x += 1;		// offset col
+	return (x + y);
 }
 
-int main (int argc, char **argv)
+
+int main (void)
 {
-	int arg;
-	int n;
-	int larray;
-	int *index;
-	
-	if (argc == 1)
-	{
-		argv[1] = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5";
-		argc++;
-	}
-	
-	
-	if (argc != 2)
-	{
-		error();
-		return (-1);
-	}
-	
-	arg = ft_arg_count(argv[1]);
-	n = arg / 4;
-	larray = n + 2;
-	index = parser(argv[1], n, arg);
-	
-	printf("n: %i\n", n);
-	for (int i = 0; i < larray * larray; i++)
-	{
-		printf("%i", index[i]);
-		if (!((i + 1) % larray))
-			printf("\n");
-	}
+	int x = 1;
+	int y = 4;
+	int n = 5;
+
+	printf("%i", get_box_cell(x, y, n));
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matwinte <matwinte@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 06:07:10 by matwinte          #+#    #+#             */
-/*   Updated: 2022/06/14 01:54:14 by matwinte         ###   ########.fr       */
+/*   Updated: 2022/06/19 02:37:06 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-int	ft_atoi(char *str)
+//use a pointer to return the amount of char processed
+int	ft_atoi_count(char *str, int *k)
 {
 	int	i;
 	int	sign;
@@ -52,5 +53,6 @@ int	ft_atoi(char *str)
 		nbr += (str[i] - '0');
 		i++;
 	}
+	*k = i;
 	return (nbr * sign);
 }

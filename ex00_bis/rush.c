@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <unistd.h>
+#define MIN_N 4
+#define MAX_N 9
 
-#include "ft_atoi.c"	//DEBUG
-#include <stdio.h>		//DEBUG
+#include "ft_atoi.c"	// DEBUG
+#include <stdio.h>		// DEBUG
 
 int ft_arg_count(char *str)
 {
@@ -13,8 +15,8 @@ int ft_arg_count(char *str)
 	words = 0;
 	while (str[i])
 	{
-		if ((!ft_isspace(str[i]) && ft_isspace(str[i + 1]))		//Check for char followed with space
-			|| (!ft_isspace(str[i]) && str[i + 1] == 0)) 		//check for word followed with end of string
+		if ((!ft_isspace(str[i]) && ft_isspace(str[i + 1]))		// Check for char followed with space
+			|| (!ft_isspace(str[i]) && str[i + 1] == 0)) 		// Check for word followed with end of string
 			words++;
 		i++;
 	}
@@ -36,10 +38,25 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
+int *get_index_cell(int x, int y, int n)
+{
+	int index_cell[4];
+}
+
+int get_box_cell(int x, int y, int n)
+{
+	y *= n + 2;
+	y += n + 2;
+	x += 1;
+	return (x + y);
+}
+
+
 int *parser(char *str, int n, int arg)
 {
 	int i;
 	int j;
+	int k;
 	int cel;
 	int *index;
 
@@ -50,11 +67,12 @@ int *parser(char *str, int n, int arg)
 		return (0);
 	while (j < arg && str[i])
 	{
+		k = 0;
 		cel = get_pos_index_cell(j, n);
-		index[cel] = ft_atoi(&str[i]);
-		if (index[cel] < 1 || index[cel] > n)
+		index[cel] = ft_atoi_count(&str[i], &k);
+		if (index[cel] < 1 || index[cel] > n || k != 1) // check if value in range && only 2 char have been processed
 			return(0);
-		i += 2;
+		i += k + 1;
 		j++;
 	}
 	return (index);
@@ -67,28 +85,45 @@ void error(void)
 
 int main (int argc, char **argv)
 {
-	int arg;
-	int n;
-	int larray;
-	int *index;
+	int arg;	// Count ARG
+	int n;		// BOX Array SIZE
+	int larray;	// FULL ARRAY SIZE
+	int *index; // ARRAY
 	
-	if (argc == 1)	//DEBUG
+	if (argc == 1)	// DEBUG
 	{
-		argv[1] = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5";
+		argv[1] = "1 2 3 4 1 2 3 4 1 2 3 4 1 2 3 4";
 		argc++;
-	}				//DEBUG
+	}				// DEBUG
 	
 	
 	if (argc != 2)
 	{
 		error();
+		printf("argc count\n"); //DEBUG
 		return (-1);
 	}
 	
 	arg = ft_arg_count(argv[1]);
-	n = arg / 4;
-	larray = n + 2;
-	index = parser(argv[1], n, arg);
+
+	if (!(arg % 4) && (4 * MIN_N) <= arg && arg <= (4 * MAX_N)) //Check if arg is multiple of 4, and it's in the correct range of 4 multiples
+	{
+		n = arg / 4;
+		larray = n + 2;
+		index = parser(argv[1], n, arg);
+		if (!index)
+		{
+			error();
+			printf("Arg parsing issue\n"); //DEBUG
+			return (-1);
+		}
+	}
+	else
+	{
+		error();
+		printf("Arg count issue\n"); //DEBUG
+		return (-1);
+	}
 	
 	printf("n: %i\n", n); 	//DEBUG
 	for (int i = 0; i < larray * larray; i++)
