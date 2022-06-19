@@ -1,5 +1,17 @@
-#ifndef FT_H
-# define FT_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/19 17:37:02 by mwinter           #+#    #+#             */
+/*   Updated: 2022/06/19 18:23:13 by mwinter          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef HEADER_H
+# define HEADER_H
 # include <stdlib.h>
 # include <unistd.h>
 # define MIN_N 4
@@ -7,159 +19,45 @@
 
 typedef struct s_coordinate
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 }	t_coord;
 
-/*
-Count argument
+//file utils.c
+int	ft_char_is_numeric(char c);
+int	ft_char_is_sign(char c);
+int	ft_isspace(char c);
+int	ft_atoi_count(char *str, int *k);
 
-Return: int of nbr of words in argument
-*/
-int ft_arg_count(char *str);
+//file parser.c
+int	ft_arg_count(char *str);
+int	*parser(char *str, int n, int arg);
+int	check_forbidden_index(int n, int *map);
 
-/*
-Get correct cell placement
+//file coordinate.c
+int	get_pos_index_cell(int pos, int n);
+int	*get_index_cell(t_coord coord, int n, int side, int *map);
+int	*get_box_cell(t_coord coord, int n, int *map);
 
-Return: Return the map[cell] for index 
-*/
-int get_pos_index_cell(int pos, int n);
+//file check_duplicates.c
+int	row_check(t_coord box_coord, int box_height, int n, int *map);
+int	col_check(t_coord box_coord, int box_height, int n, int *map);
+int	duplicate_check(t_coord box_coord, int box_height, int n, int *map);
 
-/*
-Get index address
+//file check_index.c
+int	index_check_up(t_coord coord, int n, int *map);
+int	index_check_down(t_coord coord, int n, int *map);
+int	index_check_left(t_coord coord, int n, int *map);
+int	index_check_right(t_coord coord, int n, int *map);
+int	index_check(t_coord coord, int n, int *map);
 
-Return: pointer on index
-*/
-int *get_index_cell(t_coord coord, int n, int side, int *map);
+//file check_solution.c
 
-/*
-Get box address
+//file solver.c
+int	safe(t_coord coord, int box_height, int n, int *map);
+int	solve(int n, int stock_box, int *map);
 
-Unit test : ok
-
-Return: pointer on box
-*/
-int *get_box_cell(t_coord coord, int n, int *map);
-
-/*
-Check row for duplicate
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int row_check(t_coord box_coord, int box_height, int n, int *map);
-
-/*
-Check col for duplicate
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int col_check(t_coord box_coord, int box_height, int n, int *map);
-
-/*
-Call for duplicate check
-Want:
-1 - FAIL
-0 - SUCCESS
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int duplicate_check(t_coord box_coord, int box_height, int n, int *map);
-
-/*
-Count/check shown tower from up index
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int index_check_up(t_coord coord, int n, int *map);
-
-/*
-Count/check shown tower from down index
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int index_check_down(t_coord coord, int n, int *map);
-
-/*
-Count/check shown tower from left index
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int index_check_left(t_coord coord, int n, int *map);
-
-/*
-Count/check shown tower from right index
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int index_check_right(t_coord coord, int n, int *map);
-
-/*
-Call for index check
-
-Want:
-1 - FAIL
-0 - SUCCESS
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int index_check(t_coord coord, int n, int *map);
-
-/*
-Call for duplicate
-Put box
-Call index check
-Rollback if needed
-
-Want:
-1 - FAIL
-0 - SUCCESS
-
-Return:
-1 - FAIL
-0 - SUCCESS
-*/
-int safe(t_coord coord, int box_height, int n, int *map);
-
-/*
-Recursive backtracking
-
-Want:
-1 - FAIL
-0 - SUCCESS
-
-Return:
-*/
-int solve(int n, int stock_box, int *map);
-
-/*
-Parse arguments
-
-Return:
-*/
-int *parser(char *str, int n, int arg);
-
-/*
-Error message
-
-Return:
-*/
-void error(void);
-
+//file show.c
+int	error(void);
 
 #endif

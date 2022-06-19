@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/13 06:07:10 by matwinte          #+#    #+#             */
-/*   Updated: 2022/06/19 02:37:06 by mwinter          ###   ########.fr       */
+/*   Created: 2022/06/19 17:41:15 by mwinter           #+#    #+#             */
+/*   Updated: 2022/06/19 17:41:20 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-//use a pointer to return the amount of char processed
 int	ft_atoi_count(char *str, int *k)
 {
 	int	i;

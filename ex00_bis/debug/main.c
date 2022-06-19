@@ -389,7 +389,7 @@ int main (int argc, char **argv)
 	
 	if (argc == 1)	// DEBUG
 	{
-		argv[1] = "4 3 2 1 1 2 2 2 4 3 2 1 1 2 2 2";
+		argv[1] = "3 2 3 1 2 3 1 2 2 2 1 3 1 3 3 2";
 		argc++;
 	}				// DEBUG
 	if (argc != 2)
