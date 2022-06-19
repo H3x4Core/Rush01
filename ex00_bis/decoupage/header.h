@@ -6,7 +6,7 @@
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 17:37:02 by mwinter           #+#    #+#             */
-/*   Updated: 2022/06/19 18:23:13 by mwinter          ###   ########.fr       */
+/*   Updated: 2022/06/19 19:06:20 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,12 @@ int	index_check_left(t_coord coord, int n, int *map);
 int	index_check_right(t_coord coord, int n, int *map);
 int	index_check(t_coord coord, int n, int *map);
 
-//file check_solution.c
-
 //file solver.c
 int	safe(t_coord coord, int box_height, int n, int *map);
 int	solve(int n, int stock_box, int *map);
 
 //file show.c
+int	print_grid(t_coord coord, int n, int *map);
 int	error(void);
 
 #endif
