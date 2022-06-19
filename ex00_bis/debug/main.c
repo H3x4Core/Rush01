@@ -17,6 +17,14 @@ typedef struct s_coordinate
 #include "ft_atoi.c"
 #include <stdio.h>
 
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
 void debug_print(int n, int *map, int data, char *str)
 {
 	printf("%s: %i\n", str, data);
@@ -28,12 +36,17 @@ void debug_print(int n, int *map, int data, char *str)
 	}
 }
 
+int *get_box_cell(t_coord coord, int n, int *map);
+
 void debug_print_coord(int n, int *map, t_coord coord, char *str)
 {
 	printf("%s: (%i,%i)\n", str, coord.x, coord.y);
 	for (int i = 0; i < (n + 2) * (n + 2); i++)
 	{
-		printf("%i", map[i]);
+		if (&map[i] == get_box_cell(coord, n, map))
+			printf(ANSI_COLOR_RED "%i" ANSI_COLOR_RESET, map[i]);
+		else
+			printf("%i", map[i]);
 		if (!((i + 1) % (n + 2)))
 			printf("\n");
 	}
@@ -154,7 +167,9 @@ int index_check_up(t_coord coord, int n, int *map)
 			highest_encounter = height;
 		}
 		if (count > index)
-			return (1);
+			{if (height == 1) //DEBUG
+				printf("HERE !!!\n");
+			return (1);}
 		check_coord.y++;		
 	}
 	return (0);
@@ -183,7 +198,9 @@ int index_check_down(t_coord coord, int n, int *map)
 			highest_encounter = height;
 		}
 		if (count > index)
-			return (1);
+			{if (height == 1) //DEBUG
+				printf("HERE !!!\n");
+			return (1);}
 		check_coord.y--;		
 	}
 	return (0);
@@ -203,7 +220,7 @@ int index_check_left(t_coord coord, int n, int *map)
 	height = 0;
 	highest_encounter = 0;
 	count = 0;
-	while (check_coord.y < n)
+	while (check_coord.x < n)
 	{
 		height = *get_box_cell(check_coord, n, map);
 		if ( height > highest_encounter)
@@ -212,8 +229,10 @@ int index_check_left(t_coord coord, int n, int *map)
 			highest_encounter = height;
 		}
 		if (count > index)
-			return (1);
-		check_coord.y--;		
+			{if (height == 1) //DEBUG
+				printf("HERE !!!\n");
+			return (1);}
+		check_coord.x++;		
 	}
 	return (0);
 }
@@ -232,7 +251,7 @@ int index_check_right(t_coord coord, int n, int *map)
 	height = 0;
 	highest_encounter = 0;
 	count = 0;
-	while (check_coord.y > -1)
+	while (check_coord.x > -1)
 	{
 		height = *get_box_cell(check_coord, n, map);
 		if ( height > highest_encounter)
@@ -241,8 +260,10 @@ int index_check_right(t_coord coord, int n, int *map)
 			highest_encounter = height;
 		}
 		if (count > index)
-			return (1);
-		check_coord.y--;		
+			{if (height == 1) //DEBUG
+				printf("HERE !!!\n");
+			return (1);}
+		check_coord.x--;		
 	}
 	return (0);
 }
@@ -251,7 +272,7 @@ int index_check(t_coord coord, int n, int *map)
 {
 	if (index_check_up(coord, n, map)
 		|| index_check_down(coord, n, map)
-		|| index_check_right(coord, n, map)
+		|| index_check_left(coord, n, map)
 		|| index_check_right(coord, n, map))
 		return (1);
 	
@@ -342,7 +363,7 @@ int main (int argc, char **argv)
 	
 	if (argc == 1)	// DEBUG
 	{
-		argv[1] = "2 3 1 3 3 2 2 1 2 1 2 4 2 4 2 1";
+		argv[1] = "3 1 2 4 2 2 3 2 1 2 2 2 1 3 3 3 1 5 3 2";
 		argc++;
 	}				// DEBUG
 
@@ -395,13 +416,18 @@ int main (int argc, char **argv)
 int main (void)
 {
 	int n = 4;
-	int map[36] = {0, 4, 3, 2, 1, 0,
-					4, 0, 0, 0, 0, 1,
-					3, 0, 0, 0, 0, 2,
-					2, 0, 0, 0, 0, 2,
-					1, 0, 0, 0, 0, 2,
-					0, 1, 2, 2, 2, 0};
-	debug_print(n, map, 0, "");
+	int map[36] = {0, 2, 3, 1, 3, 0,
+					2, 0, 2, 4, 3, 2,
+					1, 4, 3, 2, 1, 4,
+					2, 3, 4, 1, 2, 2,
+					4, 2, 1, 3, 4, 1,
+					0, 3, 2, 2, 1, 0};
+	
+	debug_print(n, map, 0, "Original");
+
+	solve(n, 0, map);
+
+	debug_print(n, map, 1, "Solved");
 
 	t_coord coord;
 	for (coord.x = 0; coord.x < n; coord.x++)
@@ -413,6 +439,7 @@ int main (void)
 		}
 		
 	}
-	
+
 }
+
 */
