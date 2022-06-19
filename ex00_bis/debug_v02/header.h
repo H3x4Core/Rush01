@@ -6,7 +6,7 @@
 /*   By: mwinter <mwinter@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/19 17:37:02 by mwinter           #+#    #+#             */
-/*   Updated: 2022/06/19 19:06:20 by mwinter          ###   ########.fr       */
+/*   Updated: 2022/06/19 20:32:21 by mwinter          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ typedef struct s_coordinate
 	int	x;
 	int	y;
 }	t_coord;
+
+typedef struct s_check
+{
+	t_coord	coord;
+	int		index;
+	int		height;
+	int		highest_encounter;
+	int		count;
+	int		not_placed;
+}	t_check;
 
 //file utils.c
 int	ft_char_is_numeric(char c);
@@ -56,7 +66,7 @@ int	safe(t_coord coord, int box_height, int n, int *map);
 int	solve(int n, int stock_box, int *map);
 
 //file show.c
-int	print_grid(t_coord coord, int n, int *map);
+int	print_grid(int n, int *map);
 int	error(void);
 
 #endif
