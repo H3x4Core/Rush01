@@ -1,10 +1,23 @@
+/* HEADER START */
+
 #include <stdlib.h>
 #include <unistd.h>
 #define MIN_N 4
 #define MAX_N 9
 
+typedef struct s_coordinate
+{
+	int x;
+	int y;
+}	t_coord;
+
+/* HEADER STOP */
+
+/* DEBUG START */
 #include "ft_atoi.c"	// DEBUG
 #include <stdio.h>		// DEBUG
+
+/* DEBUG STOP */
 
 int ft_arg_count(char *str)
 {
@@ -38,49 +51,113 @@ int get_pos_index_cell(int pos, int n)
 	return (0);
 }
 
-int *get_index_cell(int x, int y, int n, int side,int *map)
+int *get_index_cell(t_coord coord, int n, int side, int *map)
 {
 	if (side == 0)
-		return (&map[x + 1]);							//col_up
+		return (&map[coord.x + 1]);								//col_up
 	if (side == 1)
-		return (&map[(x + 1 + (n + 1) * (n + 2))]);		//col_down
+		return (&map[(coord.x + 1 + (n + 1) * (n + 2))]);		//col_down
 	if (side == 2)
-		return (&map[y * (n + 2) + n + 2]);				//row_left
+		return (&map[coord.y * (n + 2) + n + 2]);				//row_left
 	if (side == 3)
-		return (&map[y * (n + 2) + 2 * (n + 2) - 1]);	//row_right
+		return (&map[coord.y * (n + 2) + 2 * (n + 2) - 1]);		//row_right
 	return (0);
 }
 
-int *get_box_cell(int x, int y, int n, int *map)
+int *get_box_cell(t_coord coord, int n, int *map)
 {
-	y *= n + 2; // place to the correct row
-	y += n + 2; // offset row
-	x += 1;		// offset col
-	return (&map[x + y]);
+	coord.y *= n + 2; 	// place to the correct row
+	coord.y += n + 2; 	// offset row
+	coord.x += 1;		// offset col
+	return (&map[coord.x + coord.y]);
 }
 
+// Not used anymore
 int *get_adress(int i, int *map)
 {
 	return (&map[i]);
 }
 
-/*
-int check(int x, int y, int n, int *map)
+int row_check(t_coord box_coord, int box_height, int n, int *map)
 {
-	int up;
-	int down;
-	int left;
-	int right;
-	int *index;
+	t_coord check_coord;
 	
-	while (i < n)
+	check_coord.x = 0;
+	check_coord.y = box_coord.y;
+	while (check_coord.x < (n - 1))
 	{
-		
+		if (*get_box_cell(check_coord, n, map) == box_height)
+			return (0);
+		check_coord.x++;
 	}
+	return (1);
+}
+
+int col_check(t_coord box_coord, int box_height, int n, int *map)
+{
+	t_coord check_coord;
+
+	check_coord.x = box_coord.x;
+	check_coord.y = 0;
+	while (check_coord.y < (n - 1))
+	{
+		if (*get_box_cell(check_coord, n, map) == box_height)	// col
+			return (0);
+		check_coord.y++;
+	}
+	return (1);
+}
+
+int duplicate_check(t_coord box_coord, int box_height, int n, int *map)
+{
+	if (col_check(box_coord, box_height, n, map)
+		&& row_check(box_coord, box_height, n, map))
+		return (0);
+	return (1);
+}
+
+int index_check()
+{
+	return (1);
+}
+
+int safe(t_coord coord, int box_height, int n, int *map)
+{
+	if (duplicate_check(coord, box_height, n, map))
+		*get_box_cell(coord, n, map) = box_height;
+	if (index_check(coord, box_height, n, map))
+		return (1);
+	*get_box_cell(coord, n, map) = 0;
+	return (0);	
+}
+
+// Backtracking
+int solve(int n, int stock_box, int *map)
+{
+	t_coord coord;
+	int box_height;
 	
+	coord.x = 0;
+	while (coord.x < n)
+	{
+		box_height = 1 + stock_box / n;
+		coord.y = stock_box % n;
+		if (*get_box_cell(coord, n, map) == 0)
+		{
+			if (safe(coord, box_height, n, map))
+			{
+				if (stock_box == 0)
+					return (1);
+				if (solve(n, stock_box - 1, map))
+					return (1);
+				*get_box_cell(coord, n, map) = 0; 
+			}
+		}
+		coord.x++;
+	}
 	return (0);
 }
-*/
+
 
 //WARNING MALLOC
 int *parser(char *str, int n, int arg)
@@ -119,7 +196,7 @@ int main (int argc, char **argv)
 	int arg;	// Count ARG
 	int n;		// BOX Array SIZE
 	int larray;	// FULL ARRAY SIZE
-	int *map; 	// ARRAY
+	int *map; 	// MAP
 	
 	if (argc == 1)	// DEBUG
 	{
@@ -164,9 +241,23 @@ int main (int argc, char **argv)
 			printf("\n");
 	}						//DEBUG
 
-	//DEBUG TEST ACCESS AND WRITE IN MAP
-	printf("%i\n", *get_box_cell(1, 1, n, map));
-	printf("%i\n", *get_index_cell(1, 1, n, 0, map));
+	solve(n, (n * n - 1), map);
 
+		printf("n: %i\n", n); 	//DEBUG
+	for (int i = 0; i < larray * larray; i++)
+	{
+		printf("%i", map[i]);
+		if (!((i + 1) % larray))
+			printf("\n");
+	}						//DEBUG
+
+	//DEBUG TEST ACCESS AND WRITE IN MAP
+	t_coord coord;
+	coord.x = 1;
+	coord.y = 1;
+	printf("%i\n", *get_box_cell(coord, n, map));
+	printf("%i\n", *get_index_cell(coord, n, 0, map));
+
+	free(map);
 	return (0);
 }
