@@ -14,9 +14,19 @@ typedef struct s_coordinate
 /* HEADER STOP */
 
 /* DEBUG START */
-#include "ft_atoi.c"	// DEBUG
-#include <stdio.h>		// DEBUG
+#include "ft_atoi.c"
+#include <stdio.h>
 
+void debug_print(int n, int *map, int data, char *str)
+{
+	printf("%s: %i\n", str, data);
+	for (int i = 0; i < (n + 2) * (n + 2); i++)
+	{
+		printf("%i", map[i]);
+		if (!((i + 1) % (n + 2)))
+			printf("\n");
+	}
+}
 /* DEBUG STOP */
 
 int ft_arg_count(char *str)
@@ -72,19 +82,13 @@ int *get_box_cell(t_coord coord, int n, int *map)
 	return (&map[coord.x + coord.y]);
 }
 
-// Not used anymore
-int *get_adress(int i, int *map)
-{
-	return (&map[i]);
-}
-
 int row_check(t_coord box_coord, int box_height, int n, int *map)
 {
 	t_coord check_coord;
 	
 	check_coord.x = 0;
 	check_coord.y = box_coord.y;
-	while (check_coord.x < (n - 1))
+	while (check_coord.x < n)
 	{
 		if (*get_box_cell(check_coord, n, map) == box_height)
 			return (0);
@@ -99,7 +103,7 @@ int col_check(t_coord box_coord, int box_height, int n, int *map)
 
 	check_coord.x = box_coord.x;
 	check_coord.y = 0;
-	while (check_coord.y < (n - 1))
+	while (check_coord.y < n)
 	{
 		if (*get_box_cell(check_coord, n, map) == box_height)	// col
 			return (0);
@@ -116,16 +120,127 @@ int duplicate_check(t_coord box_coord, int box_height, int n, int *map)
 	return (1);
 }
 
-int index_check()
+int index_check_up(t_coord coord, int n, int *map)
 {
-	return (1);
+	int index;
+	t_coord check_coord;
+	int height;
+	int prev_box_height;
+	int count;
+
+	index = *get_index_cell(coord, n, 0, map);
+	check_coord.x = coord.x;
+	check_coord.y = 0;
+	height = 0;
+	prev_box_height = 0;
+	count = 0;
+	while (check_coord.y < n)
+	{
+		height = *get_box_cell(check_coord, n, map);
+		if ( height > prev_box_height)
+			count++;
+		if (count > index)
+			return (1);
+		check_coord.y++;		
+	}
+	return (0);
+}
+
+int index_check_down(t_coord coord, int n, int *map)
+{
+	int index;
+	t_coord check_coord;
+	int height;
+	int prev_box_height;
+	int count;
+
+	index = *get_index_cell(coord, n, 1, map);
+	check_coord.x = coord.x;
+	check_coord.y = n - 1;
+	height = 0;
+	prev_box_height = 0;
+	count = 0;
+	while (check_coord.y > -1)
+	{
+		height = *get_box_cell(check_coord, n, map);
+		if ( height > prev_box_height)
+			count++;
+		if (count > index)
+			return (1);
+		check_coord.y--;		
+	}
+	return (0);
+}
+
+int index_check_left(t_coord coord, int n, int *map)
+{
+	int index;
+	t_coord check_coord;
+	int height;
+	int prev_box_height;
+	int count;
+
+	index = *get_index_cell(coord, n, 2, map);
+	check_coord.x = 0;
+	check_coord.y = coord.y;
+	height = 0;
+	prev_box_height = 0;
+	count = 0;
+	while (check_coord.y < n)
+	{
+		height = *get_box_cell(check_coord, n, map);
+		if ( height > prev_box_height)
+			count++;
+		if (count > index)
+			return (1);
+		check_coord.y--;		
+	}
+	return (0);
+}
+
+int index_check_right(t_coord coord, int n, int *map)
+{
+	int index;
+	t_coord check_coord;
+	int height;
+	int prev_box_height;
+	int count;
+
+	index = *get_index_cell(coord, n, 3, map);
+	check_coord.x = n - 1;
+	check_coord.y = coord.y;
+	height = 0;
+	prev_box_height = 0;
+	count = 0;
+	while (check_coord.y > -1)
+	{
+		height = *get_box_cell(check_coord, n, map);
+		if ( height > prev_box_height)
+			count++;
+		if (count > index)
+			return (1);
+		check_coord.y--;		
+	}
+	return (0);
+}
+
+int index_check(t_coord coord, int n, int *map)
+{
+	if (index_check_up(coord, n, map)
+		|| index_check_down(coord, n, map)
+		|| index_check_right(coord, n, map)
+		|| index_check_right(coord, n, map))
+		return (1);
+	
+	return (0);
 }
 
 int safe(t_coord coord, int box_height, int n, int *map)
 {
 	if (duplicate_check(coord, box_height, n, map))
-		*get_box_cell(coord, n, map) = box_height;
-	if (index_check(coord, box_height, n, map))
+		return (1);
+	*get_box_cell(coord, n, map) = box_height;
+	if (index_check(coord, n, map))
 		return (1);
 	*get_box_cell(coord, n, map) = 0;
 	return (0);	
@@ -195,7 +310,6 @@ int main (int argc, char **argv)
 {
 	int arg;	// Count ARG
 	int n;		// BOX Array SIZE
-	int larray;	// FULL ARRAY SIZE
 	int *map; 	// MAP
 	
 	if (argc == 1)	// DEBUG
@@ -217,7 +331,6 @@ int main (int argc, char **argv)
 	if (!(arg % 4) && (4 * MIN_N) <= arg && arg <= (4 * MAX_N)) //Check if arg is multiple of 4, and it's in the correct range of 4 multiples
 	{
 		n = arg / 4;
-		larray = n + 2;
 		map = parser(argv[1], n, arg);
 		if (!map)
 		{
@@ -232,24 +345,11 @@ int main (int argc, char **argv)
 		printf("Arg count issue\n"); //DEBUG
 		return (-1);
 	}
-	
-	printf("n: %i\n", n); 	//DEBUG
-	for (int i = 0; i < larray * larray; i++)
-	{
-		printf("%i", map[i]);
-		if (!((i + 1) % larray))
-			printf("\n");
-	}						//DEBUG
 
+	debug_print(n, map, 0, " -- original --");
 	solve(n, (n * n - 1), map);
+	debug_print(n, map, 0, " -- solved --");
 
-		printf("n: %i\n", n); 	//DEBUG
-	for (int i = 0; i < larray * larray; i++)
-	{
-		printf("%i", map[i]);
-		if (!((i + 1) % larray))
-			printf("\n");
-	}						//DEBUG
 
 	//DEBUG TEST ACCESS AND WRITE IN MAP
 	t_coord coord;
@@ -257,6 +357,7 @@ int main (int argc, char **argv)
 	coord.y = 1;
 	printf("%i\n", *get_box_cell(coord, n, map));
 	printf("%i\n", *get_index_cell(coord, n, 0, map));
+	//DEBUG TEST END
 
 	free(map);
 	return (0);
